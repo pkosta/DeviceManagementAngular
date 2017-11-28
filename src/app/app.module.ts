@@ -17,6 +17,7 @@ import { DevicesComponent } from './devices/devices.component';
 import { ROUTES } from './app.routes';
 import { RequestDeviceComponent } from './request-device/request-device.component';
 import { AuthGuardService } from './auth-guard.service';
+import { UserService } from './user.service';
 
 
 @NgModule({
@@ -36,7 +37,11 @@ import { AuthGuardService } from './auth-guard.service';
     AngularFireDatabaseModule,
     AngularFireAuthModule
   ],
-  providers: [AuthService, AuthGuardService],
+  providers: [
+    AuthService, 
+    AuthGuardService,
+    UserService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

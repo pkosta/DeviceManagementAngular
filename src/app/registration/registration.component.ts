@@ -9,13 +9,15 @@ import { AuthService } from '../auth.service';
 export class RegistrationComponent {
 
   email: string = "";
-
   password: string = "";
+  fullName: string = "";
 
   constructor(private authService: AuthService) { }
 
   submitLogin() {
-    this.authService.createUserWithEmailPassword(this.email, this.password);
+    this.authService.createUserWithEmailPassword(this.fullName, 
+      this.email, 
+      this.password);
   }
 
 }

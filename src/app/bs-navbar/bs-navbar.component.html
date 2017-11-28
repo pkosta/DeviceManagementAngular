@@ -45,10 +45,10 @@
         </li>
       </ng-template>
 
-      <li *ngIf="authService.user$ | async as user; else anonymousUser" class="nav-item dropdown">
+      <li *ngIf="appUser; else anonymousUser" class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
           aria-expanded="false">
-          {{ user.email }}
+          {{ appUser.name + appUser.email }}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="#">Action</a>

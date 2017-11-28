@@ -3,6 +3,8 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase'
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute } from '@angular/router';
+import { UserService } from './user.service';
+import { AppUser } from './models/user';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +13,7 @@ export class AuthService {
 
   constructor(
     private afAuth: AngularFireAuth,
+    private userService: UserService,
     private activateRoute: ActivatedRoute) {
     this.user$ = afAuth.authState;
   }
@@ -28,8 +31,26 @@ export class AuthService {
     this.afAuth.auth.signOut();
   }
 
-  createUserWithEmailPassword(email: string, password: string) {
-    this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+  createUserWithEmailPassword(
+    fullName: string,
+    email: string,
+    password: string) {
+
+    this.afAuth.auth.createUserWithEmailAndPassword(email, password)
+      .then(user => {
+        // saving the user in the database
+        this.userService.save(fullName, user);
+      });
+  }
+
+  getAppUser$():Observable<AppUser>{
+    return this.user$.switchMap(user => {
+      if(user) {
+        return this.userService.getUserWithId(user.uid).valueChanges();
+      } else {
+        return Observable.of(null);
+      }
+    });
   }
 
 }
