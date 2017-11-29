@@ -23,6 +23,8 @@ import { ManageDevicesComponent } from './admin/manage-devices/manage-devices.co
 import { AdminGuardService } from './admin-guard.service';
 import { ManageInventoryComponent } from './admin/manage-inventory/manage-inventory.component';
 import { MyProfileComponent } from './my-profile/my-profile.component';
+import { AddNewDeviceComponent } from './admin/add-new-device/add-new-device.component';
+import { DeviceService } from './device.service';
 
 
 @NgModule({
@@ -36,7 +38,8 @@ import { MyProfileComponent } from './my-profile/my-profile.component';
     ManageUsersComponent,
     ManageDevicesComponent,
     ManageInventoryComponent,
-    MyProfileComponent
+    MyProfileComponent,
+    AddNewDeviceComponent
   ],
   imports: [
     BrowserModule,
@@ -50,7 +53,8 @@ import { MyProfileComponent } from './my-profile/my-profile.component';
     AuthService, 
     AuthGuardService,
     UserService,
-    AdminGuardService
+    AdminGuardService,
+    DeviceService
   ],
   bootstrap: [AppComponent]
 })

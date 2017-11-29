@@ -9,6 +9,7 @@ import { ManageUsersComponent } from "./admin/manage-users/manage-users.componen
 import { AdminGuardService } from "./admin-guard.service";
 import { ManageInventoryComponent } from "./admin/manage-inventory/manage-inventory.component";
 import { MyProfileComponent } from "./my-profile/my-profile.component";
+import { AddNewDeviceComponent } from "./admin/add-new-device/add-new-device.component";
 
 export const ROUTES = [
     { path: '', component: DevicesComponent },
@@ -41,6 +42,11 @@ export const ROUTES = [
     {
         path: 'admin/manage/inventories',
         component: ManageInventoryComponent,
+        canActivate: [AuthGuardService, AdminGuardService]
+    },
+    {
+        path: 'admin/manage/devices/add-new',
+        component: AddNewDeviceComponent,
         canActivate: [AuthGuardService, AdminGuardService]
     }
 ];

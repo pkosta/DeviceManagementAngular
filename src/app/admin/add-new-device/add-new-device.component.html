@@ -1,0 +1,62 @@
+<form #addDeviceForm="ngForm" (ngSubmit)="onSubmitAddDeviceForm(addDeviceForm, $event)">
+
+  <div class="form-group">
+    <label for="deviceAssetId">Asset Id</label>
+    <input ngModel name="deviceAssetId" id="deviceAssetId" type="text" class="form-control" placeholder="Asset Id">
+  </div>
+
+  <div class="form-group">
+    <label for="deviceName">Name</label>
+    <input ngModel name="deviceName" id="deviceName" type="text" class="form-control" placeholder="Device name">
+  </div>
+
+  <div class="form-group">
+    <label for="deviceDescription">Decription</label>
+    <input ngModel name="deviceDescription" id="deviceDescription" type="text" class="form-control" placeholder="Device description">
+  </div>
+
+  <div class="form-group">
+    <label for="deviceOs">Operating System</label>
+    <select ngModel name="deviceOs" id="deviceOs" type="dropdown" class="form-control">
+      <option value="">Select OS</option>
+      <option value="Android">Android</option>
+      <option value="iOS">iOS</option>
+    </select>
+    <small>Android or iOS operating system</small>
+  </div>
+
+  <div class="form-group">
+    <label for="deviceOsName">OS Name</label>
+    <input ngModel name="deviceOsName" id="deviceOsName" type="text" class="form-control" placeholder="OS name">
+  </div>
+
+  <div class="form-group">
+    <label for="deviceOsVersion">OS Version</label>
+    <input ngModel name="deviceOsVersion" id="deviceOsVersion" type="text" class="form-control" placeholder="OS version">
+  </div>
+
+  <div class="form-group">
+    <label for="deviceSize">Size</label>
+    <input ngModel name="deviceSize" id="deviceSize" type="text" class="form-control" placeholder="Device size">
+    <small>Mention size in inches. e.g. 5.0"</small>
+  </div>
+
+  <div class="form-group">
+    <label for="deviceColor">Color</label>
+    <input ngModel name="deviceColor" id="deviceColor" type="text" class="form-control" placeholder="Device color">
+  </div>
+
+  <div class="form-group">
+    <label for="deviceStatus">Status</label>
+    <select ngModel name="deviceStatus" id="deviceStatus" type="dropdown" class="form-control">
+      <option value="">Status</option>
+      <option value="available">Available</option>
+      <option value="requested">Requested</option>
+      <option value="issued">Issued</option>
+    </select>
+    <small>Android or iOS operating system</small>
+  </div>
+
+  <button #submitButton ngModel name="submit" type="submit" class="btn btn-primary">Add Device</button>
+
+</form>
