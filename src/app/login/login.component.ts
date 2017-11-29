@@ -8,13 +8,14 @@ import { AuthService } from '../auth.service';
 })
 export class LoginComponent {
 
-  email: string = "";
-
-  password: string = "";
-
   constructor(private authSerive: AuthService) { }
 
-  submitLogin() {
-    this.authSerive.loginWithEmailPassword(this.email, this.password);
+  submitLoginForm(formJsonValue, element) {
+    element.textContent = "Signing in...";
+    element.disabled = true;
+    console.log(formJsonValue);
+    this.authSerive.loginWithEmailPassword(
+      formJsonValue.email,
+      formJsonValue.password);
   }
 }

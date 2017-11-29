@@ -14,7 +14,11 @@ export class BsNavbarComponent {
   constructor(public authService: AuthService) {
     this.authService.getAppUser$()
       .subscribe(appUser => {
-        this.appUser = appUser;
+        if (appUser) {
+          this.appUser = appUser;
+        } else {
+          this.appUser = null;
+        }
       })
   }
 

@@ -18,6 +18,11 @@ import { ROUTES } from './app.routes';
 import { RequestDeviceComponent } from './request-device/request-device.component';
 import { AuthGuardService } from './auth-guard.service';
 import { UserService } from './user.service';
+import { ManageUsersComponent } from './admin/manage-users/manage-users.component';
+import { ManageDevicesComponent } from './admin/manage-devices/manage-devices.component';
+import { AdminGuardService } from './admin-guard.service';
+import { ManageInventoryComponent } from './admin/manage-inventory/manage-inventory.component';
+import { MyProfileComponent } from './my-profile/my-profile.component';
 
 
 @NgModule({
@@ -27,7 +32,11 @@ import { UserService } from './user.service';
     LoginComponent,
     RegistrationComponent,
     DevicesComponent,
-    RequestDeviceComponent
+    RequestDeviceComponent,
+    ManageUsersComponent,
+    ManageDevicesComponent,
+    ManageInventoryComponent,
+    MyProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +49,8 @@ import { UserService } from './user.service';
   providers: [
     AuthService, 
     AuthGuardService,
-    UserService
+    UserService,
+    AdminGuardService
   ],
   bootstrap: [AppComponent]
 })

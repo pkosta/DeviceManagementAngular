@@ -14,7 +14,9 @@ export class RegistrationComponent {
 
   constructor(private authService: AuthService) { }
 
-  submitLogin() {
+  submitLogin(element: any) {
+    element.textContent = "Signing up...";
+    element.disabled = true;
     this.authService.createUserWithEmailPassword(this.fullName, 
       this.email, 
       this.password);
