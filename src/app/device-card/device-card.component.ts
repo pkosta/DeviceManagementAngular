@@ -18,4 +18,6 @@ export class DeviceCardComponent {
 
   @Input() device: Device[];
 
+  @Input() showActions: boolean = true; // if the consumer wants to show no actions
+
 }

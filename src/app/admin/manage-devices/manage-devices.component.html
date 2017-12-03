@@ -1,1 +1,22 @@
-<a routerLink="/admin/manage/devices/add-new" class="btn btn-primary">Add New Device</a>
+<div class="container">
+    <a routerLink="/admin/manage/devices/add-new" class="btn btn-primary">Add New Device</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Asset Id</th>
+                <th>Device Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let device of devices">
+                <td>{{ device.deviceAssetId }}</td>
+                <td>{{ device.deviceName}}</td>
+                <td>
+                    <a [routerLink]="['/admin/manage/devices', device.deviceAssetId]">View/Edit</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

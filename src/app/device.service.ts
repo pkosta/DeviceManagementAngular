@@ -9,14 +9,10 @@ export class DeviceService {
 
   constructor(private afDatabase: AngularFireDatabase) { }
 
-  saveNewDevice(deviceJson) {
+  saveDevice(deviceJson) {
     console.log("Saving New Device to Server: " + deviceJson);
     return this.afDatabase.object("/devices/" + deviceJson.deviceAssetId)
       .update(deviceJson);
-  }
-
-  getAllDevices$(): Observable<{}> {
-    return this.afDatabase.list("/devices").valueChanges();
   }
 
   getAllDevices(callbackFunction) {
@@ -25,8 +21,26 @@ export class DeviceService {
     });
   }
 
+  getDeviceWithId(deviceAssetId: string, callbackFunction) {
+    firebase.database().ref("/devices/" + deviceAssetId).once("value", snapshot => {
+      callbackFunction(this.convertDatasnapshotToDevice(snapshot));
+    })
+  }
+
+  removeDeviceWithId(deviceAssetId: string, callbackFunction) {
+    firebase.database().ref("/devices/" + deviceAssetId).remove()
+      .then(() => {
+        callbackFunction(true);
+      });
+  }
+
   removeAllDeviceRef(callbackFunction) {
     firebase.database().ref("/devices").off("value", callbackFunction);
+  }
+
+
+  getAllDevices$(): Observable<{}> {
+    return this.afDatabase.list("/devices").valueChanges();
   }
 
   /* Private Mehtods --- Implementation Detaisl */
@@ -43,6 +57,10 @@ export class DeviceService {
       devices.push(device);
     });
     return devices;
+  }
+
+  private convertDatasnapshotToDevice(snapshot): Device {
+    return { ...snapshot.val(), deviceAssetId: snapshot.key };
   }
 
 }

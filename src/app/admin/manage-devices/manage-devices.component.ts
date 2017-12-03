@@ -1,15 +1,23 @@
 import { Component, OnInit } from '@angular/core';
+import { DeviceService } from '../../device.service';
+import { Device } from '../../models/device';
 
 @Component({
   selector: 'app-manage-devices',
   templateUrl: './manage-devices.component.html',
   styleUrls: ['./manage-devices.component.css']
 })
-export class ManageDevicesComponent implements OnInit {
+export class ManageDevicesComponent {
 
-  constructor() { }
+  devices: Device[] = [];
 
-  ngOnInit() {
+  constructor(
+    private deviceService: DeviceService
+  ) { 
+    this.deviceService.getAllDevices(devices => {
+      this.devices = devices;
+    });
   }
+
 
 }

@@ -53,5 +53,10 @@ export const ROUTES = [
         path: 'admin/manage/devices/add-new',
         component: AddNewDeviceComponent,
         canActivate: [AuthGuardService, AdminGuardService]
+    },
+    {
+        path: 'admin/manage/devices/:id',
+        component: AddNewDeviceComponent,
+        canActivate: [AuthGuardService, AdminGuardService]
     }
 ];

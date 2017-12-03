@@ -1,62 +1,106 @@
-<form #addDeviceForm="ngForm" (ngSubmit)="onSubmitAddDeviceForm(addDeviceForm, $event)">
+<form class="form-margin-top" #addDeviceForm="ngForm" (ngSubmit)="onSubmitAddDeviceForm(addDeviceForm, $event)">
 
-  <div class="form-group">
-    <label for="deviceAssetId">Asset Id</label>
-    <input ngModel name="deviceAssetId" id="deviceAssetId" type="text" class="form-control" placeholder="Asset Id">
+  <div class="row">
+    <div class="col-md-4">
+
+      <div class="form-group">
+        <label for="deviceAssetId">Asset Id</label>
+        <input [(ngModel)]="device.deviceAssetId" name="deviceAssetId" id="deviceAssetId" type="text" class="form-control" placeholder="Asset Id">
+      </div>
+      <!-- device asset id -->
+
+      <div class="form-group">
+        <label for="deviceInventoryId">Inventory</label>
+        <select [(ngModel)]="device.deviceInventoryId" name="deviceInventoryId" id="deviceInventoryId" type="dropdown" class="form-control">
+          <option value="">Select Inventory</option>
+          <option *ngFor="let i of inventories" [value]="i.inventoryKey">{{ i.name }}</option>
+        </select>
+        <small>If no inventory associated, please select 'Other'.</small>
+      </div>
+      <!-- device inventory -->
+
+      <div class="form-group">
+        <label for="deviceName">Name</label>
+        <input [(ngModel)]="device.deviceName" name="deviceName" id="deviceName" type="text" class="form-control" placeholder="Device name">
+      </div>
+      <!-- device name -->
+
+      <div class="form-group">
+        <label for="deviceDescription">Decription</label>
+        <input [(ngModel)]="device.deviceDescription" name="deviceDescription" id="deviceDescription" type="text" class="form-control"
+          placeholder="Device description">
+      </div>
+      <!-- device description -->
+
+      <div class="form-group">
+        <label for="deviceColor">Color</label>
+        <input [(ngModel)]="device.deviceColor" name="deviceColor" id="deviceColor" type="text" class="form-control" placeholder="Device color">
+      </div>
+      <!-- device color -->
+
+    </div>
+
+    <div class="col-md-4">
+
+      <div class="form-group">
+        <label for="deviceOs">Operating System</label>
+        <select [(ngModel)]="device.deviceOs" name="deviceOs" id="deviceOs" type="dropdown" class="form-control">
+          <option value="">Select OS</option>
+          <option value="Android">Android</option>
+          <option value="iOS">iOS</option>
+        </select>
+      </div>
+      <!-- operating system -->
+
+      <div class="form-group">
+        <label for="deviceSize">Size</label>
+        <input [(ngModel)]="device.deviceSize" name="deviceSize" id="deviceSize" type="text" class="form-control" placeholder="Device size">
+        <small>Mention size in inches. e.g. 5.0"</small>
+      </div>
+      <!-- device size -->
+
+      <div class="form-group">
+        <label for="deviceStatus">Status</label>
+        <select [(ngModel)]="device.deviceStatus" name="deviceStatus" id="deviceStatus" type="dropdown" class="form-control">
+          <option value="">Status</option>
+          <option value="Available">Available</option>
+          <option value="Requested">Requested</option>
+          <option value="Issued">Issued</option>
+        </select>
+      </div>
+      <!-- device status -->
+
+      <div class="form-group">
+        <label for="deviceOsName">OS Name</label>
+        <input [(ngModel)]="device.deviceOsName" name="deviceOsName" id="deviceOsName" type="text" class="form-control" placeholder="OS name">
+      </div>
+      <!-- device os name -->
+
+      <div class="form-group">
+        <label for="deviceOsVersion">OS Version</label>
+        <input [(ngModel)]="device.deviceOsVersion" name="deviceOsVersion" id="deviceOsVersion" type="text" class="form-control"
+          placeholder="OS version">
+      </div>
+      <!-- device os version -->
+    </div>
+
+    <div class="col-md-4">
+
+      <h4>Device Preview</h4>
+      <device-card [device]="device" [showActions]="false"></device-card>
+      <button type="submit" [disabled]="submitControlDisabled" class="btn btn-primary btn-block">{{ submitButtonText }}</button>
+      <button (click)="onDeleteDevice()" [disabled]="deleteControlDisabled" name="delete" type="button" class="btn btn-danger btn-block">{{ deleteButtonText }}</button>
+      <button (click)="onBack()" name="back" type="button" class="btn btn-secondary btn-block">Back to Device List</button>      
+    </div>
   </div>
 
-  <div class="form-group">
-    <label for="deviceName">Name</label>
-    <input ngModel name="deviceName" id="deviceName" type="text" class="form-control" placeholder="Device name">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="form-group">
+        <label for="deviceUrl">Device Url</label>
+        <input [(ngModel)]="device.deviceUrl" name="deviceUrl" id="deviceUrl" type="text" class="form-control" placeholder="Device Url">
+      </div>
+      <!-- device url -->
+    </div>
   </div>
-
-  <div class="form-group">
-    <label for="deviceDescription">Decription</label>
-    <input ngModel name="deviceDescription" id="deviceDescription" type="text" class="form-control" placeholder="Device description">
-  </div>
-
-  <div class="form-group">
-    <label for="deviceOs">Operating System</label>
-    <select ngModel name="deviceOs" id="deviceOs" type="dropdown" class="form-control">
-      <option value="">Select OS</option>
-      <option value="Android">Android</option>
-      <option value="iOS">iOS</option>
-    </select>
-    <small>Android or iOS operating system</small>
-  </div>
-
-  <div class="form-group">
-    <label for="deviceOsName">OS Name</label>
-    <input ngModel name="deviceOsName" id="deviceOsName" type="text" class="form-control" placeholder="OS name">
-  </div>
-
-  <div class="form-group">
-    <label for="deviceOsVersion">OS Version</label>
-    <input ngModel name="deviceOsVersion" id="deviceOsVersion" type="text" class="form-control" placeholder="OS version">
-  </div>
-
-  <div class="form-group">
-    <label for="deviceSize">Size</label>
-    <input ngModel name="deviceSize" id="deviceSize" type="text" class="form-control" placeholder="Device size">
-    <small>Mention size in inches. e.g. 5.0"</small>
-  </div>
-
-  <div class="form-group">
-    <label for="deviceColor">Color</label>
-    <input ngModel name="deviceColor" id="deviceColor" type="text" class="form-control" placeholder="Device color">
-  </div>
-
-  <div class="form-group">
-    <label for="deviceStatus">Status</label>
-    <select ngModel name="deviceStatus" id="deviceStatus" type="dropdown" class="form-control">
-      <option value="">Status</option>
-      <option value="available">Available</option>
-      <option value="requested">Requested</option>
-      <option value="issued">Issued</option>
-    </select>
-    <small>Android or iOS operating system</small>
-  </div>
-
-  <button #submitButton ngModel name="submit" type="submit" class="btn btn-primary">Add Device</button>
-
 </form>
