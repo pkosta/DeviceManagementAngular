@@ -1,67 +1,69 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-  <a class="navbar-brand" href="#">TDM</a>
-  <!--The below button will be useful in case of small width...provide the hamburger icon-->
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
-    aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">TDM</a>
+    <!--The below button will be useful in case of small width...provide the hamburger icon-->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-    <ul class="navbar-nav mr-auto">
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
 
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Devices
-          <span class="sr-only">(current)</span>
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link" href="#">Inventories
-          <span class="sr-only">(current)</span>
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link" href="#">Users
-          <span class="sr-only">(current)</span>
-        </a>
-      </li>
-
-    </ul>
-
-    <ul class="navbar-nav">
-
-      <ng-template #anonymousUser>
-        <li [routerLinkActive]="['active']" class="nav-item">
-          <a class="nav-link" routerLink="/signup">SignUp
+        <li routerLinkActive="['active']" class="nav-item">
+          <a class="nav-link" routerLink="/devices">Devices
             <span class="sr-only">(current)</span>
           </a>
         </li>
 
-        <li [routerLinkActive]="['active']" class="nav-item">
-          <a class="nav-link" routerLink="/signin">SignIn
+        <li routerLinkActive="['active']" class="nav-item">
+          <a class="nav-link" routerLink="/inventories">Inventories
             <span class="sr-only">(current)</span>
           </a>
         </li>
-      </ng-template>
 
-      <li *ngIf="appUser; else anonymousUser" class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
-          aria-expanded="false">
-          {{ appUser.name }}
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" routerLink="/myprofile">My Profile</a>
-          <ng-container *ngIf="appUser.isAdmin">
+        <li routerLinkActive="['active']" class="nav-item">
+          <a class="nav-link" routerLink="/users">Users
+            <span class="sr-only">(current)</span>
+          </a>
+        </li>
+
+      </ul>
+
+      <ul class="navbar-nav">
+
+        <ng-template #anonymousUser>
+          <li [routerLinkActive]="['active']" class="nav-item">
+            <a class="nav-link" routerLink="/signup">SignUp
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+
+          <li [routerLinkActive]="['active']" class="nav-item">
+            <a class="nav-link" routerLink="/signin">SignIn
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+        </ng-template>
+
+        <li *ngIf="appUser; else anonymousUser" class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="true">
+            {{ appUser.name }}
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" routerLink="/myprofile">My Profile</a>
+            <ng-container *ngIf="appUser.isAdmin">
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" routerLink="/admin/manage/devices">Manage Devices (Admin)</a>
+              <a class="dropdown-item" routerLink="/admin/manage/users">Manage Users (Admin)</a>
+              <a class="dropdown-item" routerLink="/admin/manage/inventories">Manage Inventories (Admin)</a>
+            </ng-container>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" routerLink="/admin/manage/devices">Manage Devices (Admin)</a>
-            <a class="dropdown-item" routerLink="/admin/manage/users">Manage Users (Admin)</a>
-            <a class="dropdown-item" routerLink="/admin/manage/inventories">Manage Inventories (Admin)</a>
-          </ng-container>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" (click)="logout()">Log Out</a>
-        </div>
-      </li>
-    </ul>
+            <a class="dropdown-item" (click)="logout()">Log Out</a>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </nav>

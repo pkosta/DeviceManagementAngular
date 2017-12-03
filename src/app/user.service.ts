@@ -3,6 +3,8 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { User } from 'firebase/app';
 import { AngularFireObject } from 'angularfire2/database/interfaces';
 import { AppUser } from './models/user';
+import { Observable } from 'rxjs/Observable';
+import * as firebase from 'firebase';
 
 @Injectable()
 export class UserService {
@@ -21,5 +23,11 @@ export class UserService {
   getUserWithId(uid: string): AngularFireObject<AppUser> {
     return this.afDatabase.object("/users/"+uid);
   }
+
+  getAllUsers$():Observable<{}> {
+    return this.afDatabase.list("/users").valueChanges();
+  }
+
+  
 
 }

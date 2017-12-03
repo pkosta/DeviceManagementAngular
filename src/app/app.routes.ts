@@ -10,9 +10,14 @@ import { AdminGuardService } from "./admin-guard.service";
 import { ManageInventoryComponent } from "./admin/manage-inventory/manage-inventory.component";
 import { MyProfileComponent } from "./my-profile/my-profile.component";
 import { AddNewDeviceComponent } from "./admin/add-new-device/add-new-device.component";
+import { UserComponent } from "./user/user.component";
+import { InventoryComponent } from "./inventory/inventory.component";
 
 export const ROUTES = [
     { path: '', component: DevicesComponent },
+    { path: 'devices', component: DevicesComponent },
+    { path: 'users', component: UserComponent },
+    { path: 'inventories', component: InventoryComponent },
     { path: 'signin', component: LoginComponent },
     { path: 'signup', component: RegistrationComponent },
 

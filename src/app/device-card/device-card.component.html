@@ -1,0 +1,20 @@
+<div class="card border-secondary">
+
+  <!-- <img class="card-img-top" [src]="device.deviceUrl" alt="Card image cap"> -->
+  <div class="thumbnail" [style.backgroundImage]="'url('+device.deviceUrl+')'" alt="Card image cap"></div>
+
+  <div class="card-body">
+    <h6 class="card-title">{{ device.deviceName }}</h6>
+    <p class="card-subtitle mb-2 font-size-small">
+      {{ device.deviceColor }} | {{ device.deviceOs }} | {{ device.deviceOsName }} | {{ device.deviceOsVersion }} | {{ device.deviceSize}}
+    </p>
+    <small>{{ device.deviceStatus }} to Palash Kosta</small>
+
+    <div><small text-right>{{ device.deviceInventoryId }}</small></div>
+  </div><!-- end of card body -->
+
+  <div class="card-footer">
+    <a href="#" class="btn btn-secondary btn-block">Request Device</a>
+  </div>  <!-- end of card footer -->
+
+</div> <!-- end of card -->

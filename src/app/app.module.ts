@@ -25,6 +25,11 @@ import { ManageInventoryComponent } from './admin/manage-inventory/manage-invent
 import { MyProfileComponent } from './my-profile/my-profile.component';
 import { AddNewDeviceComponent } from './admin/add-new-device/add-new-device.component';
 import { DeviceService } from './device.service';
+import { UserComponent } from './user/user.component';
+import { InventoryComponent } from './inventory/inventory.component';
+import { DeviceCardComponent } from './device-card/device-card.component';
+import { InventoryService } from './inventory.service';
+import { DeviceInventoryFilterComponent } from './device-inventory-filter/device-inventory-filter.component';
 
 
 @NgModule({
@@ -39,7 +44,11 @@ import { DeviceService } from './device.service';
     ManageDevicesComponent,
     ManageInventoryComponent,
     MyProfileComponent,
-    AddNewDeviceComponent
+    AddNewDeviceComponent,
+    UserComponent,
+    InventoryComponent,
+    DeviceCardComponent,
+    DeviceInventoryFilterComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +63,8 @@ import { DeviceService } from './device.service';
     AuthGuardService,
     UserService,
     AdminGuardService,
-    DeviceService
+    DeviceService,
+    InventoryService
   ],
   bootstrap: [AppComponent]
 })

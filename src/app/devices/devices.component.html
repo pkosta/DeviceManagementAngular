@@ -1,3 +1,28 @@
-<p>
-  devices works!
-</p>
+<div class="row">
+  <div class="col-md-3">
+
+    <!-- 25% of the total area -->
+    <!-- refer to device card component -->
+    <device-inventory-filter [selectedInventoryId]="selectedInventory"></device-inventory-filter>
+
+  </div>  <!-- end of side section of 3 for filter -->
+
+  <div class="col-md-9">
+    <!-- 75% of the total area -->
+    <p class="search-box">
+      <input #query (keyup)="filter(query.value)" type="text" class="form-control" placeholder="Search for devices...">
+    </p>
+
+    <div class="row">
+      <ng-container *ngFor="let device of filteredDevices; let i = index">
+        <div class="col-md-4">
+
+          <!-- refer to device card component -->
+          <device-card [device]="device"></device-card>
+
+        </div>
+        <div *ngIf="(i + 1) % 3 == 0" class="w-100"></div>
+      </ng-container>
+    </div>
+  </div>
+</div>
