@@ -12,10 +12,13 @@ import { MyProfileComponent } from "./my-profile/my-profile.component";
 import { AddNewDeviceComponent } from "./admin/add-new-device/add-new-device.component";
 import { UserComponent } from "./user/user.component";
 import { InventoryComponent } from "./inventory/inventory.component";
+import { MyWorklistComponent } from "./admin/my-worklist/my-worklist.component";
+import { DeviceDetailsComponent } from "./device-details/device-details.component";
 
 export const ROUTES = [
     { path: '', component: DevicesComponent },
     { path: 'devices', component: DevicesComponent },
+    { path: 'devices-details/:id', component: DeviceDetailsComponent },
     { path: 'users', component: UserComponent },
     { path: 'inventories', component: InventoryComponent },
     { path: 'signin', component: LoginComponent },
@@ -34,6 +37,11 @@ export const ROUTES = [
     },
 
     // protected by the auth guard service and admin users
+    {
+        path: 'admin/manage/worklist',
+        component: MyWorklistComponent,
+        canActivate: [AuthGuardService, AdminGuardService]
+    },
     {
         path: 'admin/manage/devices',
         component: ManageDevicesComponent,

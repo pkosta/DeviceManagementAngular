@@ -30,6 +30,9 @@ import { InventoryComponent } from './inventory/inventory.component';
 import { DeviceCardComponent } from './device-card/device-card.component';
 import { InventoryService } from './inventory.service';
 import { DeviceInventoryFilterComponent } from './device-inventory-filter/device-inventory-filter.component';
+import { MyWorklistComponent } from './admin/my-worklist/my-worklist.component';
+import { DeviceDetailsComponent } from './device-details/device-details.component';
+import { WorkflowService } from './workflow.service';
 
 
 @NgModule({
@@ -48,7 +51,9 @@ import { DeviceInventoryFilterComponent } from './device-inventory-filter/device
     UserComponent,
     InventoryComponent,
     DeviceCardComponent,
-    DeviceInventoryFilterComponent
+    DeviceInventoryFilterComponent,
+    MyWorklistComponent,
+    DeviceDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -64,6 +69,7 @@ import { DeviceInventoryFilterComponent } from './device-inventory-filter/device
     UserService,
     AdminGuardService,
     DeviceService,
+    WorkflowService,
     InventoryService
   ],
   bootstrap: [AppComponent]

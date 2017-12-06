@@ -1,0 +1,9 @@
+.thumbnail {
+    width: auto;
+    height: auto;
+    background-size: cover;
+}
+
+.margin-top-20 {
+    margin-top: 20px;
+}

@@ -3,6 +3,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { Observable } from 'rxjs/Observable';
 import * as firebase from 'firebase'
 import { Device } from './models/device';
+import { EDeviceStatus } from './models/devicestatus.enum';
 
 @Injectable()
 export class DeviceService {
@@ -41,6 +42,23 @@ export class DeviceService {
 
   getAllDevices$(): Observable<{}> {
     return this.afDatabase.list("/devices").valueChanges();
+  }
+
+  addUserIdToDevice(deviceId: string, userId: string) {
+    firebase.database().ref("/devices/" + deviceId).update({
+      'userId': userId
+    });
+  }
+
+  updateDeviceStatus(deviceId: string, status: EDeviceStatus) {
+    firebase.database().ref("/devices/" + deviceId).update({
+      'deviceStatus': status
+    });
+  }
+
+  removeUserIdFromDevice(deviceId: string, userId: string) {
+    firebase.database().ref("/devices/" + deviceId + "/userId")
+      .remove();
   }
 
   /* Private Mehtods --- Implementation Detaisl */
