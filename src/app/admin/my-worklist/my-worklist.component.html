@@ -1,3 +1,26 @@
-<p>
-  my-worklist works!
-</p>
+<div class="container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Action Item</th>
+        <th>Device</th>
+        <th>User</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let uwl of userWorklist">
+            <td>{{ uwl.taskName }}</td>
+            <td>{{ uwl.deviceName }} - {{ uwl.deviceAssetId }}</td>
+            <td>{{ uwl.userName }}</td>
+            <td>
+                <button (click)="onAcceptRequest(uwl)" class="btn btn-success btn-small">Accept</button>
+            </td>
+            <td>
+                <button [disabled]="isReturnRequest(uwl)" (click)="onRejectRequest(uwl)" class="btn btn-danger">Reject</button>
+            </td>
+          </tr>
+    </tbody>
+  </table>
+</div>

@@ -6,6 +6,8 @@ import { AppUser } from './models/user';
 import { Observable } from 'rxjs/Observable';
 import * as firebase from 'firebase';
 import { AuthService } from './auth.service';
+import { UserWorklist } from './models/worklist';
+import { RequestType } from './models/requesttype.enum';
 
 @Injectable()
 export class UserService {
@@ -36,14 +38,28 @@ export class UserService {
     return this.afDatabase.list("/users").valueChanges();
   }
 
-  private convertDatasnapshotToAppUser(snapshot): AppUser {
-    return { name: snapshot.val().name, email: "", isAdmin: false, userId: snapshot.key };
+  getWorklistForUserId(userId: string, callbackFunction) {
+    return firebase.database().ref("/users/" + userId + "/worklist")
+      .on("value", snapshots => {
+        callbackFunction(this.convertDatasnapshotsToWorklist(snapshots));
+      });
   }
 
-  addDeviceToWorklist(adminUserId: string, deviceId: string) {
+  addDeviceToWorklist(adminUserId: string,
+    userId: string,
+    deviceId: string,
+    worklistType: RequestType,
+    deviceName: string,
+    userName: string) {
+    console.log(userId);
     // add device to worklist...here user id will be admin
     return firebase.database().ref("/users/" + adminUserId + "/worklist/" + deviceId)
-      .set("true");
+      .set({
+        'userId': userId,
+        'requestType': worklistType,
+        'userName': userName,
+        'deviceName': deviceName
+      });
   }
 
   addDeviceToRequestList(userId: string, deviceId: string) {
@@ -71,9 +87,33 @@ export class UserService {
   }
 
   removeDeviceFromDeviceList(userId: string, deviceId: string) {
-    // delete device from request...here user id will be admin
+    // delete device from device...here user id will be admin
     return firebase.database().ref("/users/" + userId + "/device/" + deviceId)
       .remove();
+  }
+
+  /******************* Private Methods --- Implementation Details *************/
+  private convertDatasnapshotToAppUser(snapshot): AppUser {
+    return { name: snapshot.val().name, email: "", isAdmin: false, userId: snapshot.key };
+  }
+
+  private convertDatasnapshotsToWorklist(snapshots): UserWorklist[] {
+    let worklists: UserWorklist[] = [];
+  
+    if (snapshots.val() == null || snapshots.val() === undefined) return worklists;
+
+    Object.keys(snapshots.val()).forEach(key => {
+      let snapShotItem = snapshots.val()[key];
+
+      let worklist: UserWorklist = {
+        ...snapShotItem,
+        deviceAssetId: key,
+        taskName: "One Item in WorkList" + snapShotItem.requestType
+      };
+
+      worklists.push(worklist);
+    });
+    return worklists;
   }
 
 }

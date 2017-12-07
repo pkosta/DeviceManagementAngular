@@ -3,6 +3,10 @@ import * as firebase from 'firebase'
 import { UserService } from './user.service';
 import { DeviceService } from './device.service';
 import { EDeviceStatus } from './models/devicestatus.enum';
+import { RequestType } from './models/requesttype.enum';
+import { Device } from './models/device';
+import { AppUser } from './models/user';
+import { error } from 'util';
 /**
  * Flow 1: User request the device
  * 1. Add worklist to admin user
@@ -53,10 +57,13 @@ export class WorkflowService {
    * @param deviceId 
    * @param userId 
    */
-  public requestDeviceForId(deviceId: string, userId: string) {
+  public requestDeviceForId(device: Device, appUser: AppUser) {
+    let deviceId = device.deviceAssetId;
+    let userId = appUser.userId;
     // TODO:- Need to do inside the transaction
     // Add worklist to admin user
-    let worklistPromise = this.addDeviceToWorklist(deviceId);
+    let worklistPromise = this.addDeviceToWorklist(deviceId,
+      userId, RequestType.REQUEST_DEVICE, device.deviceName, appUser.name);
     // Add requestDevice to acting user
     let requestListPromise = this.addDeviceToRequestList(userId, deviceId);
     // Add user id attribute to requested device
@@ -129,9 +136,12 @@ export class WorkflowService {
    * @param deviceId 
    * @param userId 
    */
-  public returnRequestForId(deviceId: string, userId: string) {
+  public returnRequestForId(device: Device, appUser: AppUser) {
+    let deviceId = device.deviceAssetId;
+    let userId = appUser.userId;
     // Add the item into the worklist
-    let workListPromise = this.addDeviceToWorklist(deviceId);
+    let workListPromise = this.addDeviceToWorklist(deviceId, userId,
+      RequestType.RETURN_DEVICE, device.deviceName, appUser.name);
     // change the status to available
     let changeStatusPromise = this.changeDeviceStatus(deviceId,
       EDeviceStatus.Return_Requested);
@@ -146,7 +156,7 @@ export class WorkflowService {
     // Remove from the worklist
     let workListPromise = this.removeDeviceFromWorklist(deviceId);
     // Remove the device from user
-    let requestListPromise = this.removeDeviceFromRequestList(userId, deviceId);
+    let requestListPromise = this.removeDeviceFromDeviceList(userId, deviceId);
     // Remove userId attribute from requested device
     let userIdPromise = this.removeUserIdFromDevice(userId, deviceId);
     // Change the device status to Available
@@ -156,8 +166,15 @@ export class WorkflowService {
   /**
    * Private Methods --- Implementation Details
    */
-  private addDeviceToWorklist(deviceId: string) {
-    this.userService.addDeviceToWorklist(this.adminUserId, deviceId);
+  private addDeviceToWorklist(
+    deviceId: string,
+    userId: string,
+    requestType: RequestType,
+    deviceName: string,
+    userName: string) {
+    this.userService.addDeviceToWorklist(
+      this.adminUserId, userId, deviceId,
+      requestType, deviceName, userName);
   }
 
   private removeDeviceFromWorklist(deviceId: string) {
@@ -177,7 +194,7 @@ export class WorkflowService {
   }
 
   private removeDeviceFromDeviceList(userId: string, deviceId: string) {
-
+    return this.userService.removeDeviceFromDeviceList(userId, deviceId);
   }
 
   private addUserIdToDevice(userId: string, deviceId: string) {

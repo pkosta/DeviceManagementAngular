@@ -61,7 +61,7 @@
 
       <div class="form-group">
         <label for="deviceStatus">Status</label>
-        <select [(ngModel)]="device.deviceStatus" name="deviceStatus" id="deviceStatus" type="dropdown" class="form-control">
+        <select [disabled]="true" [(ngModel)]="device.deviceStatus" name="deviceStatus" id="deviceStatus" type="dropdown" class="form-control">
           <option value="">Status</option>
           <option value="Available">Available</option>
           <option value="Requested">Requested</option>

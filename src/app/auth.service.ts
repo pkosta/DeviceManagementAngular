@@ -43,13 +43,20 @@ export class AuthService {
       });
   }
 
-  getAppUser$():Observable<AppUser>{
+  getAppUser$(): Observable<AppUser> {
     return this.user$.switchMap(user => {
-      if(user) {
+      if (user) {
         return this.userService.getUserWithId(user.uid).valueChanges();
       } else {
         return Observable.of(null);
       }
+    });
+  }
+
+  getLoggedInUser(callbackFunction) {
+    let loggedInUserId = firebase.auth().currentUser.uid;
+    this.userService.getUserWithIdNative(loggedInUserId, appUser => {
+      callbackFunction(appUser);
     });
   }
 

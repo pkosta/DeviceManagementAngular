@@ -7,6 +7,7 @@ import { AppUser } from '../models/user';
 import { WorkflowService } from '../workflow.service';
 import { EDeviceCardButtonVisible } from '../models/card.device.button.visible.enum';
 import { when } from 'q';
+import { User } from 'firebase';
 
 /**
  * Clean and Beutiful Class
@@ -26,7 +27,7 @@ export class DeviceCardComponent implements OnInit {
   @Input() device: Device;
   @Input() showActions: boolean = true; // if the consumer wants to show no actions
   userAssociatedDevice: AppUser;
-  loggedInUserId: string;
+  loggedInUser: AppUser;
 
   mutableDevice: Device;
   requestButtonVisible: boolean = false;
@@ -45,15 +46,16 @@ export class DeviceCardComponent implements OnInit {
     this.mutableDevice = new Device();
     Object.assign(this.mutableDevice, this.device);
 
-    this.authService.user$.subscribe(user => {
-      this.loggedInUserId = user.uid;
+    this.authService.getLoggedInUser(loggedInUser => {
+      console.log("Logged In User", loggedInUser);
+      this.loggedInUser = loggedInUser;
       this.deviceCardButtonsVisibility();
       if (this.mutableDevice.userId) {
         this.userService.getUserWithIdNative(this.mutableDevice.userId, user => {
           this.userAssociatedDevice = user;
         });
       }
-    });
+    })
   }
 
   onCardClick() {
@@ -61,23 +63,23 @@ export class DeviceCardComponent implements OnInit {
   }
 
   onRequestDeviceClick(device: Device) {
-    this.workflowService.requestDeviceForId(device.deviceAssetId,
-      this.loggedInUserId);
+    this.workflowService.requestDeviceForId(device,
+      this.loggedInUser);
   }
 
   onCancelRequestClick(device: Device) {
     this.workflowService.withdrawDeviceRequestForId(device.deviceAssetId,
-      this.loggedInUserId);
+      this.loggedInUser.userId);
   }
 
   onReturnRequestClick(device: Device) {
-    this.workflowService.returnRequestForId(device.deviceAssetId,
-      this.loggedInUserId);
+    this.workflowService.returnRequestForId(device,
+      this.loggedInUser);
   }
 
   /****** Private Methods --- Implementation Details ******/
   private deviceCardButtonsVisibility() {
-    let visibleButton = this.mutableDevice.getCardButton(this.loggedInUserId);
+    let visibleButton = this.mutableDevice.getCardButton(this.loggedInUser.userId);
     this.visibleButtonWithVisibleButton(visibleButton);
   }
 
