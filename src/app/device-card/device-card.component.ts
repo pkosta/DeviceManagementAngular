@@ -43,6 +43,7 @@ export class DeviceCardComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log("Device Card", this.device);
     this.mutableDevice = new Device();
     Object.assign(this.mutableDevice, this.device);
 

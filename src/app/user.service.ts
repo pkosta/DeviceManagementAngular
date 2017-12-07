@@ -8,6 +8,7 @@ import * as firebase from 'firebase';
 import { AuthService } from './auth.service';
 import { UserWorklist } from './models/worklist';
 import { RequestType } from './models/requesttype.enum';
+import { Device } from './models/device';
 
 @Injectable()
 export class UserService {
@@ -94,12 +95,28 @@ export class UserService {
 
   /******************* Private Methods --- Implementation Details *************/
   private convertDatasnapshotToAppUser(snapshot): AppUser {
-    return { name: snapshot.val().name, email: "", isAdmin: false, userId: snapshot.key };
+    let issuedDevices: string[] = [];
+    let requestedDevice: string[] = [];
+    console.log(snapshot.key, snapshot.val());
+
+    if (snapshot.val().request != null) {
+      Object.keys(snapshot.val().request).forEach(key => {
+        requestedDevice.push(key);
+      });
+    }
+    if (snapshot.val().device != null) {
+      Object.keys(snapshot.val().device).forEach(key => {
+        issuedDevices.push(key);
+      });
+    }
+    let appUser = new AppUser(snapshot.key, snapshot.val().name, "", false,
+      issuedDevices, requestedDevice);
+    return appUser;
   }
 
   private convertDatasnapshotsToWorklist(snapshots): UserWorklist[] {
     let worklists: UserWorklist[] = [];
-  
+
     if (snapshots.val() == null || snapshots.val() === undefined) return worklists;
 
     Object.keys(snapshots.val()).forEach(key => {

@@ -1,1 +1,31 @@
-<p>profile works</p>
+<div class="container">
+    <h3> {{loggedInAppUser.name}} </h3>
+
+    <h3> {{loggedInAppUser.email}} </h3>
+
+    <h3> {{loggedInAppUser.isAdmin}} </h3>
+
+    <h4>Issued Device</h4>
+    <div *ngIf="issuedDevicesPresentForUser()" class="row">
+        <ng-container *ngFor="let device of userIssuedDevices; let i = index">
+            <div class="col-md-4">
+                <!-- refer to device card component -->
+                <device-card [device]="device" [showActions]= "false"></device-card>
+            </div>
+
+            <div *ngIf="(i + 1) % 4 == 0" class="w-100"></div>
+        </ng-container>
+    </div>
+
+    <h4>Requested Device</h4>
+    <div *ngIf="requestedDevicesPresentForUser()" class="row">
+        <ng-container *ngFor="let device of userRequestedDevices; let i = index">
+            <div class="col-md-4">
+                <!-- refer to device card component -->
+                <device-card [device]="device" [showActions]= "false"></device-card>
+            </div>
+
+            <div *ngIf="(i + 1) % 4 == 0" class="w-100"></div>
+        </ng-container>
+    </div>
+</div>

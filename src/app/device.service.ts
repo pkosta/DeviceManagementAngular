@@ -18,7 +18,7 @@ export class DeviceService {
 
   getAllDevices(callbackFunction) {
     return firebase.database().ref("/devices").on("value", snapshots => {
-      callbackFunction(this.convertDatasnapshotsToDeviceArray(snapshots));
+      callbackFunction(this.convertDatasnapshotsToDeviceArray(snapshots.val()));
     });
   }
 
@@ -44,6 +44,25 @@ export class DeviceService {
     return this.afDatabase.list("/devices").valueChanges();
   }
 
+  /**
+       * methods to get list of devices with all device ids passed a parameter.
+       * @param deviceIdKeys , device ids passed
+       */
+  getDeviceDetailsWithDeviceIds(deviceIdKeys: string[], callbackFunction) {
+
+    //https://stackoverflow.com/questions/42610264/querying-by-multiple-keys-in-firebase
+    var fun = function (key) {
+      return firebase.database().ref('/devices/')
+        .child(key)
+        .once('value');
+    };
+    var promises = deviceIdKeys.map(fun);
+    Promise.all(promises).then(snapshots => {
+      callbackFunction(this.convertDatasnapshotsToDeviceArray2(snapshots));
+    });
+  }
+
+
   addUserIdToDevice(deviceId: string, userId: string) {
     firebase.database().ref("/devices/" + deviceId).update({
       'userId': userId
@@ -64,14 +83,26 @@ export class DeviceService {
   /* Private Mehtods --- Implementation Detaisl */
   private convertDatasnapshotsToDeviceArray(snapshots): Device[] {
     let devices: Device[] = [];
-    Object.keys(snapshots.val()).forEach(key => {
-      let snapShotItem = snapshots.val()[key];
+    Object.keys(snapshots).forEach(key => {
+      let snapShotItem = snapshots[key];
 
       let device: Device = {
         ...snapShotItem,
         deviceAssetId: key
       };
 
+      devices.push(device);
+    });
+    return devices;
+  }
+
+  private convertDatasnapshotsToDeviceArray2(snapshots): Device[] {
+    let devices: Device[] = [];
+    snapshots.forEach(snapshot => {
+      let device: Device = {
+        ...snapshot.val(),
+        deviceAssetId: snapshot.key
+      };
       devices.push(device);
     });
     return devices;
