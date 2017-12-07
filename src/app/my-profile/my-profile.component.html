@@ -1,28 +1,45 @@
 <div class="container">
-    <h3> {{loggedInAppUser.name}} </h3>
 
-    <h3> {{loggedInAppUser.email}} </h3>
+    <div class="row">
+        <div class="col-md-2">
+            <!-- <img class="rounded-circle" [src]="loggedInAppUser.imageUrl" alt="Card image cap"> -->
+            <div class="thumbnail" [style.backgroundImage]="'url('+loggedInAppUser.imageUrl+')'" alt="Card image cap"></div>
+        </div>
+        <div class="col-md-10">
+            <div class="user-data">
+                <h5>{{loggedInAppUser.name}}</h5>
+                 {{loggedInAppUser.email}}
+                 <br>
+                 <b>Role</b>: {{ getRoleWithIsAdminProperty() }}
+            </div>
+        </div>
+    </div>
 
-    <h3> {{loggedInAppUser.isAdmin}} </h3>
-
-    <h4>Issued Device</h4>
+    <hr>
+    <h5 *ngIf="loggedInAppUser.issuedDevices.length > 0">Issued Devices <small style="margin-right: 20px;">{{ loggedInAppUser.issuedDevices.length }} devices have been issued</small></h5>
+    <!-- <small *ngIf="loggedInAppUser.issuedDevices.length > 0">{{ loggedInAppUser.issuedDevices.length }} devices have been issued</small> -->
+    <h5 *ngIf="loggedInAppUser.issuedDevices.length <= 0">No Device has been issued</h5>
+    <hr>
     <div *ngIf="issuedDevicesPresentForUser()" class="row">
         <ng-container *ngFor="let device of userIssuedDevices; let i = index">
             <div class="col-md-4">
                 <!-- refer to device card component -->
-                <device-card [device]="device" [showActions]= "false"></device-card>
+                <device-card [device]="device" [showActions]="false"></device-card>
             </div>
 
             <div *ngIf="(i + 1) % 4 == 0" class="w-100"></div>
         </ng-container>
     </div>
-
-    <h4>Requested Device</h4>
+    <hr>
+    <h5 *ngIf="loggedInAppUser.requestedDevices.length > 0">Requested Devices</h5>
+    <small *ngIf="loggedInAppUser.requestedDevices.length > 0">{{ loggedInAppUser.requestedDevices.length }} devices have been requested</small>
+    <h5 *ngIf="loggedInAppUser.requestedDevices.length <= 0">No Device has been requested</h5>
+    <hr>
     <div *ngIf="requestedDevicesPresentForUser()" class="row">
         <ng-container *ngFor="let device of userRequestedDevices; let i = index">
             <div class="col-md-4">
                 <!-- refer to device card component -->
-                <device-card [device]="device" [showActions]= "false"></device-card>
+                <device-card [device]="device" [showActions]="false"></device-card>
             </div>
 
             <div *ngIf="(i + 1) % 4 == 0" class="w-100"></div>

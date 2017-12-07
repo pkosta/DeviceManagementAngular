@@ -1,0 +1,15 @@
+.thumbnail {
+    width: 120px;
+    height: 120px;
+    margin: auto;
+    border-radius: 100%;
+    background-size: cover;
+}
+
+.container {
+    margin-top: 80px;
+}
+
+.user-data {
+    margin-top: 20px;
+}

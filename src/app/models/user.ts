@@ -7,14 +7,16 @@ export class AppUser {
     isAdmin: boolean;
     issuedDevices: string[];
     requestedDevices: string[];
+    imageUrl: string;
 
     constructor(userId: string, name: string, email: string, isAdmin: boolean,
-        issuedDevices: string[], requestedDevices: string[]) {
+        issuedDevices: string[], requestedDevices: string[], imageUrl: string) {
             this.userId = userId;
             this.name = name;
             this.email = email;
             this.isAdmin = isAdmin;
             this.issuedDevices = issuedDevices;
             this.requestedDevices = requestedDevices;
+            this.imageUrl = imageUrl;
     }
 }

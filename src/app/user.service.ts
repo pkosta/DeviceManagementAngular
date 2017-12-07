@@ -109,8 +109,9 @@ export class UserService {
         issuedDevices.push(key);
       });
     }
-    let appUser = new AppUser(snapshot.key, snapshot.val().name, "", false,
-      issuedDevices, requestedDevice);
+    let appUser = new AppUser(snapshot.key, snapshot.val().name,
+      snapshot.val().email, snapshot.val().isAdmin, issuedDevices,
+      requestedDevice, snapshot.val().imageUrl);
     return appUser;
   }
 

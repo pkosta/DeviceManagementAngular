@@ -47,6 +47,14 @@ export class MyProfileComponent implements OnInit {
     }
   }
 
+  getRoleWithIsAdminProperty() {
+    if (this.loggedInAppUser.isAdmin) {
+      return "Admin"
+    } else {
+      return "Device User"
+    }
+  }
+
   private getUserIssuedDevices(deviceIds: string[]) {
     this.deviceService.getDeviceDetailsWithDeviceIds(deviceIds, devices => {
       this.userIssuedDevices = devices;
