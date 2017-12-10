@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-7">
       <table class="table">
         <thead>
           <tr>
@@ -23,7 +23,7 @@
           </tr>
           <tr>
             <td>Inventory</td>
-            <td>{{ device.deviceInventoryId }}</td>
+            <td>{{ inventoryName }}</td>
           </tr>
           <tr>
             <td>Android / iOS OS</td>
@@ -35,23 +35,46 @@
           </tr>
           <tr>
             <td>Device Size</td>
-            <td>{{ device.deviceSize }}</td>
+            <td>
+              {{ device.deviceSize }}
+            </td>
           </tr>
           <tr>
             <td>Device Status</td>
-            <td>{{ device.deviceStatus }}</td>
+            <td>{{ device.deviceStatus }} 
+              <span *ngIf="userAssociatedDevice"> - {{ userAssociatedDevice.name }}</span>
+            </td>
+          </tr>
+          <tr>
+            <td>Device Color</td>
+            <td>{{ device.deviceColor }}</td>
           </tr>
         </tbody>
       </table>
 
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-5">
       <!-- <div class="thumbnail" [style.backgroundImage]="'url('+device.deviceUrl+')'" alt="Card image cap"></div> -->
       <img class="card-img-top" [src]="device.deviceUrl" alt="Card image cap">
 
-      <div class="margin-top-20"><button class="btn btn-primary btn-block">Request Device</button></div>
-  
+      <table *ngIf="device.timestamp && mutableDevice.isDeviceIssued()" class="table">
+        <tr>
+          <td>Issued at: </td>
+          <td> {{ device.timestamp | date:'short' }} </td>
+        </tr>
+
+        <tr>
+          <td>Duration: </td>
+          <td> {{ calculateTimeDifference() }} </td>
+        </tr>
+      </table>
+
+      <div class="margin-top-20">
+          <button *ngIf="requestButtonVisible || disableButton" [disabled]="disableButton" [class.btn-secondary]="disableButton" [class.btn-success]="!disableButton" (click)="onRequestDeviceClick(device)" class="btn btn-block">Request Device</button>
+          <button *ngIf="cancelRequestVisible" (click)="onCancelRequestClick(device)" class="btn btn-warning btn-block">Cancel Request</button>
+          <button *ngIf="returnRequestVisible" (click)="onReturnRequestClick(device)" class="btn btn-success btn-block">Return Request</button>
+            </div>
     </div>
   </div>
 </div>

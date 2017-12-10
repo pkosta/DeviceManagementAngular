@@ -1,7 +1,13 @@
 .thumbnail {
     width: auto;
-    height: auto;
+    height: 150px;
     background-size: cover;
+    margin: auto;
+}
+
+.card-img-top {
+    height: 50%;
+    margin: auto;
 }
 
 .margin-top-20 {

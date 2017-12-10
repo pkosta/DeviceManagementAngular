@@ -2,9 +2,12 @@
   <div class="row">
 
     <div class="col-md-12 login-heading">
-      <h1>Mobile Device Management</h1>
-      <p class="lead">Use this site as a way to quickly find the devide of your need across all the Mobility inventory.
-        <br> All you need to request the device is to sign in into the site and enjoy!</p>
+      <h3>Mobile Device Management</h3>
+      <p class="lead">
+        <small>Get the Devices Easily.</small>
+        <br>
+        <small>Find it ---> Request for it ---> Get it.. done!!!</small>
+      </p>
     </div>
 
   </div>
@@ -16,6 +19,7 @@
     </div>
 
     <div class="col-md-6">
+
       <form #loginForm="ngForm" (ngSubmit)="submitLoginForm(loginForm.value, $event.target)">
         <div class="form-group">
           <label for="email">Email address</label>
@@ -28,7 +32,9 @@
           <input ngModel name="password" type="password" class="form-control" id="password" placeholder="Password">
         </div>
 
-        <button type="submit" class="btn btn-primary">Sign In</button>
+        <button type="submit" [disabled]="disableSignInButton" class="btn btn-primary">{{ signInMessage }}</button>
+        <br>
+        <label *ngIf="invalidAttempt" class="text-danger">Incorrect email or password. Please try again.</label>
       </form>
     </div>
   </div>

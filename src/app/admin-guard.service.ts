@@ -15,9 +15,12 @@ export class AdminGuardService implements CanActivate {
     state: RouterStateSnapshot):
     boolean | Observable<boolean> | Promise<boolean> {
 
-    return this.authService.getAppUser$().map(appUser => {
-      if (appUser.isAdmin) return true;
-      else false;
+    return new Promise((resolve, reject) => {
+      return this.authService.getLoggedInUser(appUser => {
+        console.log("Admin Guard", appUser);
+        if (appUser.isAdmin) resolve(true);
+        return resolve(false);
+      })
     });
 
   }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
+import { ViewChild } from '@angular/core/';
 
 @Component({
   selector: 'app-login',
@@ -8,14 +9,26 @@ import { AuthService } from '../auth.service';
 })
 export class LoginComponent {
 
+  disableSignInButton = false;
+  signInMessage = "Sign In";
+  invalidAttempt = false;
+
   constructor(private authSerive: AuthService) { }
 
   submitLoginForm(formJsonValue, element) {
-    element.textContent = "Signing in...";
-    element.disabled = true;
+    this.signInMessage = "Signing in...";
+    this.disableSignInButton = true;
+    this.invalidAttempt = false;
     console.log(formJsonValue);
     this.authSerive.loginWithEmailPassword(
       formJsonValue.email,
-      formJsonValue.password);
+      formJsonValue.password)
+      .catch(error => {
+        // login failure
+        console.log("Auth Falied");
+        this.disableSignInButton = false;
+        this.signInMessage = "Sign In";
+        this.invalidAttempt = true;
+      });
   }
 }

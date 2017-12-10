@@ -30,7 +30,13 @@ export class UserService {
   }
 
   getUserWithIdNative(uid: string, callbackFunction) {
-    firebase.database().ref("/users/" + uid).once("value", snapshot => {
+    return firebase.database().ref("/users/" + uid).once("value", snapshot => {
+      callbackFunction(this.convertDatasnapshotToAppUser(snapshot));
+    });
+  }
+
+  getUserWithIdNative$(uid: string, callbackFunction) {
+    return firebase.database().ref("/users/" + uid).on("value", snapshot => {
       callbackFunction(this.convertDatasnapshotToAppUser(snapshot));
     });
   }
@@ -122,11 +128,14 @@ export class UserService {
 
     Object.keys(snapshots.val()).forEach(key => {
       let snapShotItem = snapshots.val()[key];
-
+      let taskName = "Device Issue Request";
+      if (snapShotItem.requestType == 1) {
+        taskName = "Device Return Request";
+      }
       let worklist: UserWorklist = {
         ...snapShotItem,
         deviceAssetId: key,
-        taskName: "One Item in WorkList" + snapShotItem.requestType
+        taskName: taskName
       };
 
       worklists.push(worklist);

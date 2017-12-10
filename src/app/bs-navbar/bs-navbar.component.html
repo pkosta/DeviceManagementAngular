@@ -1,6 +1,8 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
   <div class="container">
-    <a class="navbar-brand" routerLink="/">TDM</a>
+    <a class="navbar-brand" routerLink="/">
+      MDM
+    </a>
     <!--The below button will be useful in case of small width...provide the hamburger icon-->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
       aria-expanded="false" aria-label="Toggle navigation">
@@ -45,6 +47,12 @@
             </a>
           </li>
         </ng-template>
+
+        <li style="margin-top: 10px; margin-right: 5px;" *ngIf="appUser && appUser.isAdmin" class="nav-item">
+          <a routerLink="/admin/manage/worklist">
+            <i class="material-icons md-light">playlist_add_check</i>
+          </a>
+        </li>
 
         <li *ngIf="appUser; else anonymousUser" class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"

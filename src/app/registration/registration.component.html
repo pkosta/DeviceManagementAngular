@@ -39,7 +39,7 @@
           <input [(ngModel)]="password" name="confirm-password" type="password" class="form-control" id="confirm-password" placeholder="Confirm Password">
         </div>
 
-        <button (click)="submitLogin($event.target)" type="submit" class="btn btn-primary">Sign Up</button>
+        <button [disabled]="disableSignUpButton" (click)="submitLogin($event.target)" type="submit" class="btn btn-primary">{{ signUpMessage }}</button>
       </form>
     </div>
   </div>

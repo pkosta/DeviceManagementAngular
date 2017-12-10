@@ -10,8 +10,7 @@ export class DeviceService {
 
   constructor(private afDatabase: AngularFireDatabase) { }
 
-  saveDevice(deviceJson) {
-    console.log("Saving New Device to Server: " + deviceJson);
+  public saveDevice(deviceJson) {
     return this.afDatabase.object("/devices/" + deviceJson.deviceAssetId)
       .update(deviceJson);
   }
@@ -23,7 +22,7 @@ export class DeviceService {
   }
 
   getDeviceWithId(deviceAssetId: string, callbackFunction) {
-    firebase.database().ref("/devices/" + deviceAssetId).once("value", snapshot => {
+    firebase.database().ref("/devices/" + deviceAssetId).on("value", snapshot => {
       callbackFunction(this.convertDatasnapshotToDevice(snapshot));
     })
   }
@@ -71,6 +70,7 @@ export class DeviceService {
 
   updateDeviceStatus(deviceId: string, status: EDeviceStatus) {
     firebase.database().ref("/devices/" + deviceId).update({
+      'timestamp': new Date(),
       'deviceStatus': status
     });
   }
@@ -109,7 +109,8 @@ export class DeviceService {
   }
 
   private convertDatasnapshotToDevice(snapshot): Device {
-    return { ...snapshot.val(), deviceAssetId: snapshot.key };
+    let device: Device = { ...snapshot.val(), deviceAssetId: snapshot.key };
+    return device;
   }
 
 }

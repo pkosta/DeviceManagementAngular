@@ -8,6 +8,7 @@ import { WorkflowService } from '../workflow.service';
 import { EDeviceCardButtonVisible } from '../models/card.device.button.visible.enum';
 import { when } from 'q';
 import { User } from 'firebase';
+import { InventoryService } from '../inventory.service';
 
 /**
  * Clean and Beutiful Class
@@ -28,6 +29,7 @@ export class DeviceCardComponent implements OnInit {
   @Input() showActions: boolean = true; // if the consumer wants to show no actions
   userAssociatedDevice: AppUser;
   loggedInUser: AppUser;
+  inventoryName: string;
 
   mutableDevice: Device;
   requestButtonVisible: boolean = false;
@@ -36,27 +38,37 @@ export class DeviceCardComponent implements OnInit {
   disableButton: boolean = true;
 
   constructor(
+    private inventoryService: InventoryService,
     private workflowService: WorkflowService,
     private authService: AuthService,
     private userService: UserService,
     private router: Router) {
+    this.inventoryName = "";  // initialize with the blank.
   }
 
   ngOnInit() {
-    console.log("Device Card", this.device);
     this.mutableDevice = new Device();
+    // only for method calling
     Object.assign(this.mutableDevice, this.device);
+    this.populateData();
+  }
 
-    this.authService.getLoggedInUser(loggedInUser => {
-      console.log("Logged In User", loggedInUser);
-      this.loggedInUser = loggedInUser;
-      this.deviceCardButtonsVisibility();
-      if (this.mutableDevice.userId) {
-        this.userService.getUserWithIdNative(this.mutableDevice.userId, user => {
-          this.userAssociatedDevice = user;
-        });
-      }
-    })
+  populateData() {
+    // getting and setting inventory
+    this.inventoryService.getInventoryWithId(
+      this.device.deviceInventoryId, inventory => {
+        this.inventoryName = inventory.name;
+      });
+    // getting and setting associated user if user id present
+    if (this.device.userId) {
+      this.userService.getUserWithIdNative(this.device.userId, user => {
+        this.userAssociatedDevice = user;
+      });
+    }
+    // now put up the user specific data...
+    // 1. check if the user is log in
+    // 2. if login...show the cancel and return button
+    this.updateInfoBasedOnLoggedInUser();
   }
 
   onCardClick() {
@@ -64,52 +76,104 @@ export class DeviceCardComponent implements OnInit {
   }
 
   onRequestDeviceClick(device: Device) {
-    this.workflowService.requestDeviceForId(device,
-      this.loggedInUser);
+    if (!this.loggedInUser) {
+      localStorage.setItem("returnUrl", "/");
+      this.router.navigate(['/signin']);
+    } else {
+      this.workflowService.requestDeviceForId(device,
+        this.loggedInUser);
+    }
   }
 
   onCancelRequestClick(device: Device) {
-    this.workflowService.withdrawDeviceRequestForId(device.deviceAssetId,
-      this.loggedInUser.userId);
+    if (!this.loggedInUser) {
+      localStorage.setItem("returnUrl", "/");
+      this.router.navigate(['/signin']);
+    } else {
+      this.workflowService.withdrawDeviceRequestForId(device.deviceAssetId,
+        this.loggedInUser.userId);
+    }
   }
 
   onReturnRequestClick(device: Device) {
-    this.workflowService.returnRequestForId(device,
-      this.loggedInUser);
+    if (!this.loggedInUser) {
+      localStorage.setItem("returnUrl", "/");
+      this.router.navigate(['/signin']);
+    } else {
+      this.workflowService.returnRequestForId(device,
+        this.loggedInUser);
+    }
+  }
+
+  private handleNotLoggedInCase() {
+    this.router.navigate(['/']);
   }
 
   /****** Private Methods --- Implementation Details ******/
-  private deviceCardButtonsVisibility() {
-    let visibleButton = this.mutableDevice.getCardButton(this.loggedInUser.userId);
-    this.visibleButtonWithVisibleButton(visibleButton);
+
+  private initiateButtonVisibility() {
+    this.requestButtonVisible = this.mutableDevice.isDeviceAvailable();
+    this.disableButton = this.mutableDevice.isDeviceIssued()
+      || this.mutableDevice.isDeviceRequested() || this.mutableDevice.isDeviceReturnRequested() || !this.mutableDevice.isDeviceAvailable();
+    this.cancelRequestVisible = false;
+    this.returnRequestVisible = false;
   }
 
-  private visibleButtonWithVisibleButton(visibleButton: EDeviceCardButtonVisible) {
-    switch (visibleButton) {
-      case EDeviceCardButtonVisible.REQUEST_BUTTON:
-        this.requestButtonVisible = true;
-        this.cancelRequestVisible = false;
-        this.returnRequestVisible = false;
-        this.disableButton = false;
-        break;
-      case EDeviceCardButtonVisible.CANCEL_BUTTON:
-        this.requestButtonVisible = false;
-        this.cancelRequestVisible = true;
-        this.returnRequestVisible = false;
-        this.disableButton = false;
-        break;
-      case EDeviceCardButtonVisible.RETURN_BUTTON:
-        this.requestButtonVisible = false;
-        this.cancelRequestVisible = false;
-        this.returnRequestVisible = true;
-        this.disableButton = false;
-        break;
-      case EDeviceCardButtonVisible.NO_BUTTON:
-        this.requestButtonVisible = false;
-        this.cancelRequestVisible = false;
-        this.returnRequestVisible = false;
-        this.disableButton = true;
-        break;
+  private updateInfoBasedOnLoggedInUser() {
+    this.authService.getAuthUser$(loggedInAppUser => {
+      this.loggedInUser = loggedInAppUser;
+      this.initiateButtonVisibility()
+      if (loggedInAppUser != null) {
+        if (this.device.userId && this.device.userId === loggedInAppUser.userId) {
+          // if the associated user logged in user
+          this.changeButtonsForLoggedInUser();
+        }
+      }
+    });
+  }
+
+  private changeButtonsForLoggedInUser() {
+    this.cancelRequestVisible = this.mutableDevice.isDeviceRequested();
+    this.returnRequestVisible = this.mutableDevice.isDeviceIssued();
+    this.requestButtonVisible = this.mutableDevice.isDeviceAvailable();
+    this.disableButton = this.mutableDevice.isDeviceReturnRequested();
+  }
+
+  private calculateTimeDifference() {
+    let dateStr = "";
+
+    let timestamp = this.device.timestamp;
+    let diff = new Date().getTime() - new Date(timestamp).getTime();
+
+    let minutes = Math.floor(diff / 1000 / 60);
+    let hours = Math.floor(diff / 1000 / 60 / 60);
+    let days = Math.floor(diff / 1000 / 60 / 60 / 24);
+
+    minutes = minutes - (hours * 60);
+    hours = hours - (days * 24);
+
+    if (days > 1) {
+      dateStr = dateStr + days + " days ";
+    } else if (days == 1) {
+      dateStr = dateStr + days + " day ";
     }
+
+    if (hours > 1) {
+      dateStr = dateStr + hours + " hours ";
+    } else if (hours == 1) {
+      dateStr = dateStr + hours + " hour ";
+    }
+
+    if (minutes > 1) {
+      dateStr = dateStr + minutes + " minutes ";
+    } else if (minutes == 1) {
+      dateStr = dateStr + minutes + " minute ";
+    }
+
+    if (days === 0 && hours === 0 && minutes === 0) {
+      return "Just Now"
+    }
+
+    return dateStr;
   }
 }

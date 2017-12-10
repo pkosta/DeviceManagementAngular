@@ -19,13 +19,14 @@ export class AuthGuardService implements CanActivate {
     state: RouterStateSnapshot):
     boolean | Observable<boolean> | Promise<boolean> {
 
-    return this.authService.user$.map(user => {
-      console.log("User from Guard Service: "+user);
-      if (user) return true;
-      this.router.navigate(['/signin'], { queryParams: { returnUrl: state.url } });
-      return false;
+    return new Promise((resolve, reject) => {
+      return this.authService.getLoggedInUser(appUser => {
+        console.log("Admin Guard", appUser);
+        if (appUser) return resolve(true);
+        this.router.navigate(['/signin'], { queryParams: { returnUrl: state.url } });
+        return resolve(false);
+      })
     });
-
   }
 
 }

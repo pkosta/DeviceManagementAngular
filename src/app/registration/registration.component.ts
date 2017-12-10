@@ -12,11 +12,14 @@ export class RegistrationComponent {
   password: string = "";
   fullName: string = "";
 
+  disableSignUpButton = false;
+  signUpMessage = "Sign Up";
+
   constructor(private authService: AuthService) { }
 
   submitLogin(element: any) {
-    element.textContent = "Signing up...";
-    element.disabled = true;
+    this.signUpMessage = "Signing up...";
+    this.disableSignUpButton = true;
     this.authService.createUserWithEmailPassword(this.fullName, 
       this.email, 
       this.password);

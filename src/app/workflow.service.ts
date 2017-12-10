@@ -8,6 +8,9 @@ import { Device } from './models/device';
 import { AppUser } from './models/user';
 import { error } from 'util';
 /**
+ * Responsibility: Manage the flow of the application...will be gone through this
+ * service.
+ * 
  * Flow 1: User request the device
  * 1. Add worklist to admin user
  * 2. Add requestDevice to acting user
@@ -46,7 +49,7 @@ import { error } from 'util';
 @Injectable()
 export class WorkflowService {
 
-  private adminUserId: string = "VTTJGnTvTEMnRES1kztkZGpdZyi2";
+  private adminUserId: string = "OVUwnileCmen7mYdv8igaqCwQ5c2";
 
   constructor(
     private deviceService: DeviceService,
@@ -57,7 +60,7 @@ export class WorkflowService {
    * @param deviceId 
    * @param userId 
    */
-  public requestDeviceForId(device: Device, appUser: AppUser) {
+  public requestDeviceForId(device: Device, appUser: AppUser): Promise<any> {
     let deviceId = device.deviceAssetId;
     let userId = appUser.userId;
     // TODO:- Need to do inside the transaction
@@ -72,13 +75,8 @@ export class WorkflowService {
     let changeStatusPromise =
       this.changeDeviceStatus(deviceId, EDeviceStatus.Requested)
 
-    Promise.all([worklistPromise, requestListPromise, userIdPromise, changeStatusPromise])
-      .then(status => {
-        console.log("Request Device Flow Completed Successfully");
-      })
-      .catch(error => {
-        console.log("Request Device Flow Failed");
-      });
+    return Promise.all([worklistPromise, requestListPromise,
+      userIdPromise, changeStatusPromise]);
   }
 
   /**
@@ -87,7 +85,7 @@ export class WorkflowService {
    * @param userId 
    */
   // admin
-  public acceptDeviceRequestForId(deviceId: string, userId: string) {
+  public acceptDeviceRequestForId(deviceId: string, userId: string): Promise<any> {
     // Remove from the worklist
     let workListPromise = this.removeDeviceFromWorklist(deviceId);
     // Add device to acting user
@@ -96,6 +94,9 @@ export class WorkflowService {
     let removeDevicePromise = this.removeDeviceFromRequestList(userId, deviceId);
     // Change the device status
     let changeStatusPromise = this.changeDeviceStatus(deviceId, EDeviceStatus.Issued);
+
+    return Promise.all([workListPromise, deviceListPromise,
+      removeDevicePromise, changeStatusPromise]);
   }
 
   /**
@@ -104,7 +105,7 @@ export class WorkflowService {
    * @param userId 
    */
   // admin
-  public rejectDeviceRequestForId(deviceId: string, userId: string) {
+  public rejectDeviceRequestForId(deviceId: string, userId: string): Promise<any> {
     // Remove from the worklist
     let workListPromise = this.removeDeviceFromWorklist(deviceId);
     // Remove the device from user
@@ -113,6 +114,9 @@ export class WorkflowService {
     let userIdPromise = this.removeUserIdFromDevice(userId, deviceId);
     // Change the device status
     let changeStatusPromise = this.changeDeviceStatus(deviceId, EDeviceStatus.Available)
+
+    return Promise.all([workListPromise, removeDevicePromise,
+      userIdPromise, changeStatusPromise]);
   }
 
   /**
@@ -120,7 +124,7 @@ export class WorkflowService {
    * @param deviceId 
    * @param userId 
    */
-  public withdrawDeviceRequestForId(deviceId: string, userId: string) {
+  public withdrawDeviceRequestForId(deviceId: string, userId: string): Promise<any> {
     // Remove from the worklist
     let workListPromise = this.removeDeviceFromWorklist(deviceId);
     // Remove the device from user
@@ -129,6 +133,9 @@ export class WorkflowService {
     let userIdPromise = this.removeUserIdFromDevice(userId, deviceId);
     // Change the device status to Available
     let changeStatusPromise = this.changeDeviceStatus(deviceId, EDeviceStatus.Available)
+
+    return Promise.all([workListPromise, requestListPromise,
+      userIdPromise, changeStatusPromise]);
   }
 
   /**
@@ -136,7 +143,7 @@ export class WorkflowService {
    * @param deviceId 
    * @param userId 
    */
-  public returnRequestForId(device: Device, appUser: AppUser) {
+  public returnRequestForId(device: Device, appUser: AppUser): Promise<any> {
     let deviceId = device.deviceAssetId;
     let userId = appUser.userId;
     // Add the item into the worklist
@@ -145,6 +152,8 @@ export class WorkflowService {
     // change the status to available
     let changeStatusPromise = this.changeDeviceStatus(deviceId,
       EDeviceStatus.Return_Requested);
+
+    return Promise.all([workListPromise, changeStatusPromise]);
   }
 
   /**
@@ -152,7 +161,7 @@ export class WorkflowService {
    * @param deviceId 
    * @param userId 
    */
-  public acceptReturnRequestForId(deviceId: string, userId: string) {
+  public acceptReturnRequestForId(deviceId: string, userId: string): Promise<any> {
     // Remove from the worklist
     let workListPromise = this.removeDeviceFromWorklist(deviceId);
     // Remove the device from user
@@ -161,6 +170,9 @@ export class WorkflowService {
     let userIdPromise = this.removeUserIdFromDevice(userId, deviceId);
     // Change the device status to Available
     let changeStatusPromise = this.changeDeviceStatus(deviceId, EDeviceStatus.Available)
+
+    return Promise.all([workListPromise, requestListPromise,
+      userIdPromise, changeStatusPromise]);
   }
 
   /**

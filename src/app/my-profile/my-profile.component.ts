@@ -21,6 +21,7 @@ export class MyProfileComponent implements OnInit {
     private authService: AuthService) {
 
     this.authService.getLoggedInUser(appUser => {
+      if (appUser == null) return;
       this.loggedInAppUser = appUser;
       this.getUserIssuedDevices(this.loggedInAppUser.issuedDevices);
       this.getUserRequestedDevices(this.loggedInAppUser.requestedDevices);

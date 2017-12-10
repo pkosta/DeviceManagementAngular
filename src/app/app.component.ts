@@ -9,18 +9,16 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
   
-  constructor(authService: AuthService, router: Router) {
-    authService.user$.subscribe(user => {
-      console.log("Auth State Changed");
+  constructor(private authService: AuthService, router: Router) {
+    this.authService.getAuthUser$(user => {
       if (user) {
+        console.log("User is Logged In");
         let returnUrl = localStorage.getItem("returnUrl");
-        console.log("Return Url: "+returnUrl);
         router.navigateByUrl(returnUrl);
       } else {
+        console.log("User is Not Logged In");
         router.navigate(['/']);
-        console.log("User is Null")
       }
-    }); 
+    });
   }
-
 }

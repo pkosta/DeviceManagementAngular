@@ -1,9 +1,9 @@
-<div class="card border-secondary" (click)="onCardClick()">
+<div class="card border-secondary">
 
   <!-- <img class="card-img-top" [src]="device.deviceUrl" alt="Card image cap"> -->
-  <div class="thumbnail" [style.backgroundImage]="'url('+device.deviceUrl+')'" alt="Card image cap"></div>
+  <div (click)="onCardClick()" class="thumbnail" [style.backgroundImage]="'url('+device.deviceUrl+')'" alt="Card image cap"></div>
 
-  <div class="card-body">
+  <div class="card-body"  (click)="onCardClick()">
     <h6 class="card-title">{{ device.deviceName }}</h6>
     <p class="card-subtitle mb-2 font-size-small">
       <span *ngIf="device.deviceColor">{{ device.deviceColor }} |</span>
@@ -12,23 +12,26 @@
       <span *ngIf="device.deviceOsVersion">{{ device.deviceOsVersion }} |</span>
       <span *ngIf="device.deviceSize">{{ device.deviceSize}}</span>
     </p>
-    <small>{{ device.deviceStatus }}
-      <span *ngIf="userAssociatedDevice"> - {{ userAssociatedDevice.name }}</span>
-    </small>
-
     <div>
       <small text-right>
-        <span *ngIf="device.deviceAssetId">{{ device.deviceAssetId }} - </span>
-        <span *ngIf="device.deviceInventoryId">{{ device.deviceInventoryId }}</span>
+        <span *ngIf="device.deviceAssetId">{{ device.deviceAssetId }} </span>
+        <span *ngIf="device.deviceInventoryId"> - {{ inventoryName }}</span>
       </small>
     </div>
+
+    <small>
+      <span>{{ device.deviceStatus }}</span>
+      <span *ngIf="userAssociatedDevice && !mutableDevice.isDeviceAvailable()"> - {{ userAssociatedDevice.name }}</span>
+      <br>
+      <small *ngIf="device.timestamp"> Since {{ calculateTimeDifference()}}</small>
+    </small>
   </div>
   <!-- end of card body -->
 
   <div *ngIf="showActions" class="card-footer">
-    <button *ngIf="requestButtonVisible || disableButton" [disabled]="disableButton" (click)="onRequestDeviceClick(device)" class="btn btn-primary btn-block">Request Device</button>
-    <button *ngIf="cancelRequestVisible" (click)="onCancelRequestClick(device)" class="btn btn-secondary btn-block">Cancel Request</button>
-    <button *ngIf="returnRequestVisible" (click)="onReturnRequestClick(device)" class="btn btn-secondary btn-block">Return Request</button>
+    <button *ngIf="requestButtonVisible || disableButton" [disabled]="disableButton" [class.btn-secondary]="disableButton" [class.btn-success]="!disableButton" (click)="onRequestDeviceClick(device)" class="btn btn-block">Request Device</button>
+    <button *ngIf="cancelRequestVisible" (click)="onCancelRequestClick(device)" class="btn btn-warning btn-block">Cancel Request</button>
+    <button *ngIf="returnRequestVisible" (click)="onReturnRequestClick(device)" class="btn btn-success btn-block">Return Request</button>
   </div>
   <!-- end of card footer -->
 

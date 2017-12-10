@@ -47,13 +47,13 @@ export class DevicesComponent {
   filter(query: string) {
     this.filteredDevices = (query) ?
       this.filteredDevicesForSelectedInventory.filter(p => {
-        return (p.deviceName.includes(query) ||
-          p.deviceDescription.includes(query) ||
-          p.deviceOs.includes(query) ||
-          p.deviceOsName.includes(query) ||
-          //p.deviceOsVersion.indexOf(query) >= 0 ||
-          p.deviceSize.includes(query) ||
-          p.deviceStatus.includes(query))
+        return (p.deviceName.toLowerCase().includes(query.toLowerCase()) ||
+          p.deviceDescription.toLowerCase().includes(query.toLowerCase()) ||
+          p.deviceOs.toLowerCase().includes(query.toLowerCase()) ||
+          p.deviceOsName.toLowerCase().includes(query.toLowerCase()) ||
+          p.deviceOsVersion.toString().toLowerCase().includes(query.toString().toLowerCase()) ||
+          p.deviceSize.toLowerCase().includes(query.toLowerCase()) ||
+          p.deviceStatus.toLowerCase().includes(query.toLowerCase()))
 
       }) :
       this.filteredDevicesForSelectedInventory;
